@@ -1,7 +1,7 @@
 // Determines the speed of the analogRead function for a variable number of microphones and the maximum polling rate
-#define MaximumNumberOfMics 8
+#define MaximumNumberOfMics 1
 
-const uint16_t samples = 20000; // Samples taken each time
+const uint16_t samples = 200000; // Samples taken each time
 unsigned long microseconds;
 
 struct Microphone {
@@ -10,7 +10,7 @@ struct Microphone {
 };
 
 Microphone mics[MaximumNumberOfMics];
-const unsigned int micPins[MaximumNumberOfMics] = {1, 3, 5, 6, 12, 14, 17, 18}; // first 4 on adc1 second 4 on adc2
+const unsigned int micPins[MaximumNumberOfMics] = {6}; // first 4 on adc1 second 4 on adc2
 //const unsigned int micPins[MaximumNumberOfMics] = {1,12,3,14,5,17,6,18}; // alternating adc1 and adc2
 
 
