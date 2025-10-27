@@ -64,6 +64,7 @@ void loop()
         //empty loop
         }
       }
+      microseconds += sampling_period_per_mic;
     }
 
   // at 2kHz sampling rate waits for 500us to have passed
