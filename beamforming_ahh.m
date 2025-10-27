@@ -36,7 +36,6 @@ T = 1/Fs;               % Sampling period
 t = linspace(0,L,N);    % Time array
 
 % Plot time-domain signal
-figure;
 plot(1000*t,y_mono, 1000*t, x)         
 title("Signal in Time-Domain")
 xlabel("t (milliseconds)")
@@ -120,7 +119,7 @@ legend("Mic 1","Mic 2");
 
 % Set up beamforming
 
-d = 5e-2;       % distance between microphones (m)
+d = 7e-2;       % distance between microphones (m)
 c = 343;        % speed of sound (m/s)
 
 [~,indexx] = min(abs(freq_mag_phase_x(:,1) - f0));
