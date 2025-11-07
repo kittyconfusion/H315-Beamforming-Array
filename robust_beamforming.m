@@ -3,14 +3,12 @@
 % 8 October 2025
 % Beamforming a simulated signal to find Angle of Arrival
 
-clc; 
+clc;
 
-c = 343; % speed of sound (m/s)
-d = .05; % mic spacing
 
 % Load .txt file into matlab
 
-file = '1000Hz_samples.txt'; 
+file = 'test.txt'; 
 fid = fopen(file, 'r');
 text = fread(fid, '*char')';
 fclose(fid);
@@ -91,11 +89,11 @@ legend("Mic 1","Mic 2");
 % Set up Fast Fourier Transform
 X = fft(x);
 magx = abs(X);
-phasex = angle(X) * 180/pi;
+phasex = angle(X);
 
 Y = fft(y_mono);                % Y(f): signal in frequency domain
 mag = abs(Y);                   % magnitude |Y(f)|
-phase = angle(Y) * 180/pi;      % phase of Y(f), in degrees
+phase = angle(Y);               % phase of Y(f), in radians
 
 % size of Y is same as input, so each frequency bin (index) is Fs/N (hz), 
 % and indices 0:N/2 are pos frequency, N/2+1:N-1 are neg frequency
@@ -118,31 +116,28 @@ freq_mag_phase_x = [f(:), magx(:), phasex(:)];
 % Find transmitting frequency
 
 [Mmaxy,indexy] = max(freq_mag_phase_y(:,2));
-f0y = freq_mag_phase_y(indexy,1);
+f0y = freq_mag_phase_y(indexy,1)
 
 [Mmaxx,indexx] = max(freq_mag_phase_x(:,2));
-f0x = freq_mag_phase_x(indexx,1);
+f0x = freq_mag_phase_x(indexx,1)
 
-check_f0 = f0y-f0x;
+check_f0 = f0y-f0x
 
-if (check_f0 < 1)
+f0 = (f0x + f0y)/2
 
-    f0 = (f0x + f0y)/2
 
-end
-
-%f0 = input("Please enter transmitting frequency in hz: ");
+% f0 = input("Please enter transmitting frequency in hz: ");
 
 % Setup delay
 
-delay = 0.5 * 1/Fs;
-numElements = length(phasex); 
-
-for i = 1:numElements
-    phasex(i,1) = phasex(i,1) - 2*pi*f0*delay;
+delay = 0.75 * 1/Fs;   % seconds
+for i = 1:length(freq_mag_phase_x)
+    freq = freq_mag_phase_x(i,1);
+    phasex(i,1) = phasex(i,1) - (2*pi*freq*delay);
 end
 
 freq_mag_phase_x = [f(:), magx(:), phasex(:)];
+
 
 % Plot magnitude and phase of signal in frequency - domain
 
@@ -170,12 +165,13 @@ c = 343;        % speed of sound (m/s)
 [~,indexx] = min(abs(freq_mag_phase_x(:,1) - f0));
 [~,indexy] = min(abs(freq_mag_phase_y(:,1) - f0));
 
-phi_x = freq_mag_phase_x(indexx,3) * pi/180;
-phi_y = freq_mag_phase_y(indexy,3) * pi/180;
+phi_x = freq_mag_phase_x(indexx,3) 
+phi_y = freq_mag_phase_y(indexy,3)
 
-dphi = angle(exp(1j*(phi_x - phi_y)));   % delta phi, in rad, wrap [-pi,pi]
+dphi = angle(exp(1j*(phi_x - phi_y))) % delta phi, in rad, wrap [-pi,pi]
 
-lambda = c/f0;                           % wavelength, in m
-ah = lambda / (2 * pi * d) * dphi;
+lambda = c/f0                           % wavelength, in m
+ah = lambda / (2 * pi * d) * dphi
+
 
 theta = asin(ah) * 180/pi
